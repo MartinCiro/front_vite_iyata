@@ -1,35 +1,67 @@
-// src/lib/services/projectService.js (ejemplo actualizado)
-import api from './api';
-import { API_ENDPOINTS } from 'constants/api.js';
+import api from './api.js';
 
 class ProjectService {
-  async getAll() {
-    try {
-      const response = await api.get(API_ENDPOINTS.PROJECTS.BASE);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async getProjects() {
+    const response = await api.get('/posts');
+    return response.data.map(post => ({
+      id: post.id,
+      title: post.title,
+      description: post.body,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      user_id: post.userId
+    }));
   }
 
-  async getById(id) {
-    try {
-      const response = await api.get(API_ENDPOINTS.PROJECTS.BY_ID(id));
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async getProject(id) {
+    const response = await api.get(`/posts/${id}`);
+    const post = response.data;
+    return {
+      id: post.id,
+      title: post.title,
+      description: post.body,
+      status: 'active',
+      created_at: new Date().toISOString(),
+      user_id: post.userId
+    };
   }
 
-  async create(projectData) {
-    try {
-      const response = await api.post(API_ENDPOINTS.PROJECTS.BASE, projectData);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async createProject(projectData) {
+    const response = await api.post('/posts', {
+      title: projectData.title,
+      body: projectData.description,
+      userId: 1 
+    });
+    
+    return {
+      id: response.data.id,
+      ...projectData,
+      created_at: new Date().toISOString()
+    };
   }
 
+  async updateProject(id, projectData) {
+    const response = await api.put(`/posts/${id}`, {
+      title: projectData.title,
+      body: projectData.description,
+      userId: 1
+    });
+    
+    return {
+      id: response.data.id,
+      ...projectData
+    };
+  }
+
+  async deleteProject(id) {
+    await api.delete(`/posts/${id}`);
+    return { success: true };
+  }
+
+  async getProjectUsers() {
+    const response = await api.get('/users');
+    return response.data.slice(0, 3); // Limitar a 3 usuarios
+  }
 }
 
-export default new ProjectService(); 
+export default new ProjectService();

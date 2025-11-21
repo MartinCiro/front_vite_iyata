@@ -26,7 +26,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'; 
+
+const props = defineProps({ 
   size: {
     type: [String, Number],
     default: 24,

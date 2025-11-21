@@ -1,65 +1,82 @@
-import api from './api';
+import api from './api.js';
 
 class TaskService {
-  async getByProject(projectId) {
-    try {
-      const response = await api.get(`/projects/${projectId}/tasks`);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async getTasks(projectId = null) {
+    const response = await api.get('/comments');
+    const tasks = response.data.map(comment => ({
+      id: comment.id,
+      title: `Task ${comment.id}: ${comment.name || 'Untitled'}`,
+      description: comment.body,
+      status: ['pending', 'in-progress', 'completed'][comment.id % 3],
+      priority: ['low', 'medium', 'high'][comment.id % 3],
+      due_date: new Date(Date.now() + comment.id * 86400000).toISOString(),
+      project_id: comment.postId,
+      assigned_to: `user${comment.id % 10 + 1}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }));
+
+    return projectId ? tasks.filter(task => task.project_id == projectId) : tasks;
   }
 
-  async getById(projectId, taskId) {
-    try {
-      const response = await api.get(`/projects/${projectId}/tasks/${taskId}`);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async getTask(id) {
+    const response = await api.get(`/comments/${id}`);
+    const comment = response.data;
+    
+    return {
+      id: comment.id,
+      title: `Task ${comment.id}: ${comment.name || 'Untitled'}`,
+      description: comment.body,
+      status: ['pending', 'in-progress', 'completed'][comment.id % 3],
+      priority: ['low', 'medium', 'high'][comment.id % 3],
+      due_date: new Date(Date.now() + comment.id * 86400000).toISOString(),
+      project_id: comment.postId,
+      assigned_to: `user${comment.id % 10 + 1}`,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
   }
 
-  async create(projectId, taskData) {
-    try {
-      const response = await api.post(`/projects/${projectId}/tasks`, taskData);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async createTask(taskData) {
+    const response = await api.post('/comments', {
+      name: taskData.title?.replace(`Task ${Date.now()}: `, '') || 'New Task',
+      body: taskData.description,
+      postId: taskData.project_id,
+      email: `user${taskData.assigned_to || 1}@example.com`
+    });
+
+    return {
+      id: response.data.id,
+      ...taskData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
   }
 
-  async update(projectId, taskId, taskData) {
-    try {
-      const response = await api.put(`/projects/${projectId}/tasks/${taskId}`, taskData);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async updateTask(id, taskData) {
+    const response = await api.put(`/comments/${id}`, {
+      name: taskData.title?.replace(`Task ${id}: `, '') || 'Updated Task',
+      body: taskData.description,
+      postId: taskData.project_id,
+      email: `user${taskData.assigned_to || 1}@example.com`
+    });
+
+    return {
+      id: response.data.id,
+      ...taskData,
+      updated_at: new Date().toISOString()
+    };
   }
 
-  async delete(projectId, taskId) {
-    try {
-      const response = await api.delete(`/projects/${projectId}/tasks/${taskId}`);
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
+  async deleteTask(id) {
+    await api.delete(`/comments/${id}`);
+    return { success: true };
   }
 
-  async updateStatus(projectId, taskId, status) {
-    try {
-      const response = await api.patch(`/projects/${projectId}/tasks/${taskId}/status`, { status });
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
-  }
-
-  handleError(error) {
-    if (error.response?.data) {
-      return new Error(error.response.data.message || error.response.data.errors?.join(', ') || 'An error occurred');
-    }
-    return new Error('Network error occurred');
+  // Método adicional para obtener tareas por estado
+  async getTasksByStatus(status) {
+    const allTasks = await this.getTasks();
+    return allTasks.filter(task => task.status === status);
   }
 }
 

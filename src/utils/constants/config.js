@@ -5,6 +5,10 @@ export default {
     timeout: parseInt(import.meta.env.VITE_API_TIMEOUT) || 10000,
     apiKey: import.meta.env.VITE_API_KEY || 'default_api_key',
   },
+
+  jsonPlaceholder: {
+    baseUrl: 'https://jsonplaceholder.typicode.com'
+  },
   
   // App
   app: {

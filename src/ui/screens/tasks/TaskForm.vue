@@ -99,7 +99,7 @@ import AppLayout from '../../../lib/layouts/AppLayout.vue'
 import Card from '../../../ui/useable-components/Card.vue'
 import Button from '../../../ui/useable-components/Button.vue'
 import Input from '../../../ui/useable-components/Input.vue'
-import { useTasks } from '../../../lib/hooks/useTasks'
+import { useTasks } from '../../lib/hooks/useTasks'
 import { useProjects } from '../../../lib/hooks/useProjects'
 import { useForm } from '../../../lib/hooks/useForm'
 
