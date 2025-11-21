@@ -1,5 +1,4 @@
 import { ref } from 'vue';
-import config from 'constants/config.js';
 
 export function useApi() {
   const data = ref(null);
@@ -16,9 +15,7 @@ export function useApi() {
       return result;
     } catch (err) {
       error.value = err.message;
-      if (config.features.enableDebug) {
-        console.error('API Error:', err);
-      }
+      console.error('API Error:', err);
       throw err;
     } finally {
       loading.value = false;
