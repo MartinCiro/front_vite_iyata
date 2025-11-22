@@ -321,9 +321,8 @@ const refreshData = async () => {
 }
 
 // Lifecycle
-onMounted(() => {
-  fetchCurrentUser()
-})
+onMounted(() => fetchCurrentUser())
+
 </script>
 
 <style scoped>

@@ -51,7 +51,6 @@ defineEmits<{
   'delete': [taskId: number]
 }>()
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString()
-}
+const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString()
+
 </script>

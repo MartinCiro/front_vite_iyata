@@ -1,82 +1,165 @@
-import api from './api.js';
+import api from "./api.js";
+
+// Simulamos una base de datos en memoria para tasks
+const memoryDB = new Map();
+
+// Generador de IDs únicos para tasks
+let nextTaskId = 2000;
+
+function generateUniqueTaskId() {
+  return nextTaskId++;
+}
 
 class TaskService {
   async getTasks(projectId = null) {
-    const response = await api.get('/comments');
-    const tasks = response.data.map(comment => ({
-      id: comment.id,
-      title: `Task ${comment.id}: ${comment.name || 'Untitled'}`,
-      description: comment.body,
-      status: ['pending', 'in-progress', 'completed'][comment.id % 3],
-      priority: ['low', 'medium', 'high'][comment.id % 3],
-      due_date: new Date(Date.now() + comment.id * 86400000).toISOString(),
-      project_id: comment.postId,
-      assigned_to: `user${comment.id % 10 + 1}`,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }));
+    try {
+      const response = await api.get("/todos");
+      const apiTasks = response.data.slice(0, 20);
+      
+      let tasks = apiTasks.map((todo) => {
+        const memoryData = memoryDB.get(todo.id);
 
-    return projectId ? tasks.filter(task => task.project_id == projectId) : tasks;
+        if (memoryData) return memoryData;
+
+        return {
+          id: todo.id,
+          title: todo.title,
+          description: `Task: ${todo.title}`,
+          status: todo.completed ? 'done' : 'todo',
+          priority: 'medium',
+          due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          project_id: 1,
+          created_at: new Date().toISOString(),
+          user_id: 1
+        };
+      });
+
+      // Agregar tasks creadas localmente
+      const memoryTasks = Array.from(memoryDB.values())
+        .filter(task => task.id >= 2000)
+        .filter(task => !tasks.some(t => t.id === task.id));
+
+      const allTasks = [...memoryTasks, ...tasks];
+
+      if (projectId) return allTasks.filter(task => task.project_id == projectId);
+
+      return allTasks.sort((a, b) => b.id - a.id);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getTask(id) {
-    const response = await api.get(`/comments/${id}`);
-    const comment = response.data;
-    
-    return {
-      id: comment.id,
-      title: `Task ${comment.id}: ${comment.name || 'Untitled'}`,
-      description: comment.body,
-      status: ['pending', 'in-progress', 'completed'][comment.id % 3],
-      priority: ['low', 'medium', 'high'][comment.id % 3],
-      due_date: new Date(Date.now() + comment.id * 86400000).toISOString(),
-      project_id: comment.postId,
-      assigned_to: `user${comment.id % 10 + 1}`,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+    try {
+      // Primero verificar si existe en memoria
+      const memoryData = memoryDB.get(parseInt(id));
+      if (memoryData) return memoryData;
+
+      // Si no está en memoria, buscar en la API
+      const response = await api.get(`/todos/${id}`);
+      const todo = response.data;
+
+      return {
+        id: todo.id,
+        title: todo.title,
+        description: `Task: ${todo.title}`,
+        status: todo.completed ? 'done' : 'todo',
+        priority: 'medium',
+        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        project_id: 1,
+        created_at: new Date().toISOString(),
+        user_id: 1
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async createTask(taskData) {
-    const response = await api.post('/comments', {
-      name: taskData.title?.replace(`Task ${Date.now()}: `, '') || 'New Task',
-      body: taskData.description,
-      postId: taskData.project_id,
-      email: `user${taskData.assigned_to || 1}@example.com`
-    });
+    try {
+      const newId = generateUniqueTaskId();
+      
+      const newTask = {
+        id: newId,
+        title: taskData.title,
+        description: taskData.description || "",
+        status: taskData.status || "todo",
+        priority: taskData.priority || "medium",
+        due_date: taskData.due_date || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        project_id: taskData.project_id || 1,
+        created_at: new Date().toISOString(),
+        user_id: 1
+      };
 
-    return {
-      id: response.data.id,
-      ...taskData,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
+      // Guardar en memoria
+      memoryDB.set(newTask.id, newTask);
+      return newTask;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async updateTask(id, taskData) {
-    const response = await api.put(`/comments/${id}`, {
-      name: taskData.title?.replace(`Task ${id}: `, '') || 'Updated Task',
-      body: taskData.description,
-      postId: taskData.project_id,
-      email: `user${taskData.assigned_to || 1}@example.com`
-    });
+    try {
+      const taskId = parseInt(id);
+      
+      // Si el ID es mayor o igual a 2000, es un recurso local
+      if (taskId >= 2000) {
+        
+        const existingTask = memoryDB.get(taskId);
+        if (!existingTask) throw new Error(`Task with ID ${taskId} not found in memory`);
 
-    return {
-      id: response.data.id,
-      ...taskData,
-      updated_at: new Date().toISOString()
-    };
+        const updatedTask = {
+          ...existingTask,
+          ...taskData,
+          id: taskId 
+        };
+
+        // Actualizar en memoria
+        memoryDB.set(taskId, updatedTask);
+        return updatedTask;
+      } else {
+        await api.put(`/todos/${id}`, {
+          title: taskData.title,
+          completed: taskData.status === 'done',
+          userId: 1
+        });
+
+        const updatedTask = {
+          id: taskId,
+          title: taskData.title,
+          description: taskData.description || "",
+          status: taskData.status || "todo",
+          priority: taskData.priority || "medium",
+          due_date: taskData.due_date || existingTask?.due_date || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+          project_id: taskData.project_id || 1,
+          created_at: existingTask?.created_at || new Date().toISOString(),
+          user_id: 1
+        };
+
+        // Actualizar en memoria también
+        memoryDB.set(taskId, updatedTask);
+        return updatedTask;
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
   async deleteTask(id) {
-    await api.delete(`/comments/${id}`);
-    return { success: true };
-  }
-
-  // Método adicional para obtener tareas por estado
-  async getTasksByStatus(status) {
-    const allTasks = await this.getTasks();
-    return allTasks.filter(task => task.status === status);
+    try {
+      const taskId = parseInt(id);
+      if (taskId >= 2000) {
+        memoryDB.delete(taskId);
+      } else {
+        await api.delete(`/todos/${id}`);
+        memoryDB.delete(taskId);
+      }
+      
+      return { success: true };
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

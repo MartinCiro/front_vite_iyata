@@ -16,7 +16,6 @@ export function useProjects() {
       state.projects = await ProjectService.getProjects();
     } catch (error) {
       state.error = error.message;
-      console.error("Error in fetchProjects:", error);
       throw error;
     } finally {
       state.isLoading = false;
@@ -30,7 +29,6 @@ export function useProjects() {
       state.currentProject = await ProjectService.getProject(id);
     } catch (error) {
       state.error = error.message;
-      console.error("Error in fetchProject:", error);
       throw error;
     } finally {
       state.isLoading = false;
@@ -46,20 +44,15 @@ export function useProjects() {
         projectData
       );
 
-      // 🔥 ACTUALIZAR DIRECTAMENTE en el estado local
+      // ACTUALIZAR en local
       const index = state.projects.findIndex((p) => p.id === parseInt(id));
-      if (index !== -1) {
-        state.projects[index] = updatedProject;
-      }
+      if (index !== -1) state.projects[index] = updatedProject;
 
-      if (state.currentProject?.id === parseInt(id)) {
-        state.currentProject = updatedProject;
-      }
+      if (state.currentProject?.id === parseInt(id)) state.currentProject = updatedProject;
 
       return updatedProject;
     } catch (error) {
       state.error = error.message;
-      console.error("Error in updateProject:", error);
       throw error;
     } finally {
       state.isLoading = false;
@@ -74,11 +67,9 @@ export function useProjects() {
 
       state.projects.unshift(newProject);
 
-      console.log("Project added to state:", newProject); 
       return newProject;
     } catch (error) {
       state.error = error.message;
-      console.error("Error in createProject:", error);
       throw error;
     } finally {
       state.isLoading = false;
@@ -91,11 +82,9 @@ export function useProjects() {
     try {
       await ProjectService.deleteProject(id);
       state.projects = state.projects.filter((p) => p.id !== parseInt(id));
-      if (state.currentProject?.id === parseInt(id))
-        state.currentProject = null;
+      if (state.currentProject?.id === parseInt(id)) state.currentProject = null;
     } catch (error) {
       state.error = error.message;
-      console.error("Error in deleteProject:", error);
       throw error;
     } finally {
       state.isLoading = false;

@@ -17,9 +17,7 @@ export function useTaskBoard() {
   const filteredTasks = computed(() => {
     let filtered = safeTasks.value // Usar safeTasks en lugar de tasks.value
     
-    if (statusFilter.value !== 'all') {
-      filtered = filtered.filter(task => task.status === statusFilter.value)
-    }
+    if (statusFilter.value !== 'all') filtered = filtered.filter(task => task.status === statusFilter.value)
     
     return {
       todo: filtered.filter(task => task.status === 'todo'),
@@ -30,19 +28,20 @@ export function useTaskBoard() {
 
   const handleStatusChange = async (taskId, newStatus) => {
     try {
-      await updateTaskStatus(taskId, newStatus)
+      await updateTaskStatus(taskId, newStatus);
+      
+      await fetchTasks(projectId);
+      
     } catch (error) {
-      console.error('Error updating task status:', error)
-      throw error
+      console.error('Error updating task status:', error);
     }
-  }
+  };
 
   const handleDeleteTask = async (taskId) => {
     if (confirm('Are you sure you want to delete this task?')) {
       try {
         await deleteTask(taskId)
       } catch (error) {
-        console.error('Error deleting task:', error)
         throw error
       }
     }

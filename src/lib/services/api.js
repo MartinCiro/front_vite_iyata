@@ -1,13 +1,10 @@
-// src/lib/services/api.js
 import axios from 'axios';
 import AuthService from './authService';
 import config from 'constants/config.js';
 
 // Función para determinar la base URL dinámica
 const getBaseURL = (url) => {
-  if (url && (url.includes('/login') || url.includes('/register') || url.includes('/users'))) {
-    return 'https://reqres.in/api'; // Para autenticación y usuarios
-  }
+  if (url && (url.includes('/login') || url.includes('/register') || url.includes('/users'))) return 'https://reqres.in/api'; // Para autenticación y usuarios
   return 'https://jsonplaceholder.typicode.com'; // Para datos mock (proyectos, tareas, etc.)
 };
 
@@ -31,32 +28,20 @@ api.interceptors.request.use(
     
     return requestConfig;
   },
-  (error) => {
-    console.error('Request error:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Interceptor para manejar errores globalmente
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.error('API Error:', {
-      status: error.response?.status,
-      url: error.config?.url,
-      message: error.message
-    });
     
     if (error.response?.status === 401) {
       AuthService.clearAuthData();
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
+      if (typeof window !== 'undefined') window.location.href = '/login';
     }
     
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
 );
 

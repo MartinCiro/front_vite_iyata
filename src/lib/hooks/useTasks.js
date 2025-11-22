@@ -35,12 +35,14 @@ export function useTasks() {
     }
   };
 
-  const createTask = async (taskData) => {
+  const createTask = async (taskData) => { 
     state.isLoading = true;
     state.error = null;
     try {
       const newTask = await TaskService.createTask(taskData);
-      state.tasks.push(newTask);
+      
+      state.tasks.unshift(newTask);
+      
       return newTask;
     } catch (error) {
       state.error = error.message;
@@ -50,15 +52,33 @@ export function useTasks() {
     }
   };
 
-  const updateTask = async (id, taskData) => {
+  const updateTaskStatus = async (id, status) => {
     state.isLoading = true;
     state.error = null;
     try {
-      const updatedTask = await TaskService.updateTask(id, taskData);
-      const index = state.tasks.findIndex(t => t.id === id);
-      if (index !== -1) state.tasks[index] = updatedTask;
-      if (state.currentTask?.id === id) state.currentTask = updatedTask;
+      const taskId = parseInt(id);
       
+      // Buscar la task actual en el estado local
+      const taskToUpdate = state.tasks.find(t => t.id === taskId);
+      if (!taskToUpdate) throw new Error('Task not found');
+
+      const taskData = {
+        title: taskToUpdate.title,
+        description: taskToUpdate.description,
+        status: status,
+        priority: taskToUpdate.priority,
+        due_date: taskToUpdate.due_date,
+        project_id: taskToUpdate.project_id,
+        created_at: taskToUpdate.created_at
+      };
+
+      const updatedTask = await TaskService.updateTask(id, taskData);
+
+      const index = state.tasks.findIndex(t => t.id === taskId);
+      if (index !== -1) state.tasks[index] = updatedTask;
+      
+      if (state.currentTask?.id === taskId) state.currentTask = updatedTask;
+
       return updatedTask;
     } catch (error) {
       state.error = error.message;
@@ -73,8 +93,8 @@ export function useTasks() {
     state.error = null;
     try {
       await TaskService.deleteTask(id);
-      state.tasks = state.tasks.filter(t => t.id !== id);
-      if (state.currentTask?.id === id) state.currentTask = null;
+      state.tasks = state.tasks.filter(t => t.id !== parseInt(id));
+      if (state.currentTask?.id === parseInt(id)) state.currentTask = null;
     } catch (error) {
       state.error = error.message;
       throw error;
@@ -83,22 +103,15 @@ export function useTasks() {
     }
   };
 
-  const updateTaskStatus = async (id, status) => {
+  const updateTask = async (id, taskData) => {
     state.isLoading = true;
     state.error = null;
     try {
-      const taskToUpdate = state.tasks.find(t => t.id === id);
-      if (!taskToUpdate) throw new Error('Task not found');
-
-      const updatedTask = await TaskService.updateTask(id, {
-        ...taskToUpdate,
-        status: status
-      });
-
-      const index = state.tasks.findIndex(t => t.id === id);
+      const updatedTask = await TaskService.updateTask(id, taskData);
+      const index = state.tasks.findIndex(t => t.id === parseInt(id));
       if (index !== -1) state.tasks[index] = updatedTask;
-      if (state.currentTask?.id === id) state.currentTask = updatedTask;
-
+      if (state.currentTask?.id === parseInt(id)) state.currentTask = updatedTask;
+      
       return updatedTask;
     } catch (error) {
       state.error = error.message;
@@ -108,7 +121,7 @@ export function useTasks() {
     }
   };
 
-  // Filtros computados
+  // Filtros computados (mantener igual)
   const pendingTasks = computed(() => 
     state.tasks.filter(task => task.status === 'pending')
   );

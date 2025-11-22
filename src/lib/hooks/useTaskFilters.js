@@ -6,9 +6,7 @@ export function useTaskFilters(tasks) {
   const filteredTasks = computed(() => {
     let filtered = tasks.value
     
-    if (statusFilter.value !== 'all') {
-      filtered = filtered.filter(task => task.status === statusFilter.value)
-    }
+    if (statusFilter.value !== 'all') filtered = filtered.filter(task => task.status === statusFilter.value)
     
     return {
       todo: filtered.filter(task => task.status === 'todo'),

@@ -203,9 +203,7 @@ const itemsPerPage = ref(6)
 
 // Computed properties
 const filteredProjects = computed(() => {
-  if (!searchTerm.value.trim()) {
-    return projects.value
-  }
+  if (!searchTerm.value.trim()) return projects.value
 
   const term = searchTerm.value.toLowerCase().trim()
   return projects.value.filter(project => 
@@ -214,9 +212,7 @@ const filteredProjects = computed(() => {
   )
 })
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredProjects.value.length / itemsPerPage.value)
-})
+const totalPages = computed(() =>  Math.ceil(filteredProjects.value.length / itemsPerPage.value))
 
 const paginatedProjects = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
@@ -224,13 +220,9 @@ const paginatedProjects = computed(() => {
   return filteredProjects.value.slice(start, end)
 })
 
-const startIndex = computed(() => {
-  return (currentPage.value - 1) * itemsPerPage.value
-})
+const startIndex = computed(() =>  (currentPage.value - 1) * itemsPerPage.value)
 
-const endIndex = computed(() => {
-  return Math.min(currentPage.value * itemsPerPage.value, filteredProjects.value.length)
-})
+const endIndex = computed(() => Math.min(currentPage.value * itemsPerPage.value, filteredProjects.value.length))
 
 const visiblePages = computed(() => {
   const pages = []
@@ -239,9 +231,7 @@ const visiblePages = computed(() => {
   let endPage = Math.min(totalPages.value, startPage + maxVisiblePages - 1)
   
   // Ajustar si estamos cerca del final
-  if (endPage - startPage + 1 < maxVisiblePages) {
-    startPage = Math.max(1, endPage - maxVisiblePages + 1)
-  }
+  if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1)
   
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i)
@@ -250,25 +240,17 @@ const visiblePages = computed(() => {
 })
 
 // Métodos
-const handleSearch = () => {
-  currentPage.value = 1 // Resetear a primera página al buscar
-}
+const handleSearch = () => currentPage.value = 1
 
 const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--
-  }
+  if (currentPage.value > 1) currentPage.value--
 }
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++
-  }
+  if (currentPage.value < totalPages.value) currentPage.value++
 }
 
-const goToPage = (page: number) => {
-  currentPage.value = page
-}
+const goToPage = (page: number) => currentPage.value = page
 
 const getStatusIcon = (status: string) => {
   const icons = {
@@ -300,23 +282,15 @@ const getStatusTitle = (status: string) => {
   return titles[status as keyof typeof titles] || status
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString()
-}
+const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString()
 
 // Watchers
-watch(searchTerm, () => {
-  currentPage.value = 1
-})
+watch(searchTerm, () => currentPage.value = 1)
 
+// Si la página actual no tiene elementos después de filtrar, ir a la última página válida
 watch(filteredProjects, () => {
-  // Si la página actual no tiene elementos después de filtrar, ir a la última página válida
-  if (currentPage.value > totalPages.value && totalPages.value > 0) {
-    currentPage.value = totalPages.value
-  }
+  if (currentPage.value > totalPages.value && totalPages.value > 0) currentPage.value = totalPages.value
 })
 
-onMounted(() => {
-  fetchProjects()
-})
+onMounted(() => fetchProjects())
 </script>

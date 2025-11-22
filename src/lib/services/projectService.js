@@ -1,4 +1,3 @@
-// src/lib/services/projectService.js
 import api from "./api.js";
 
 // Simulamos una base de datos en memoria para mantener la consistencia
@@ -22,9 +21,7 @@ class ProjectService {
         const memoryData = memoryDB.get(post.id);
 
         // Si existe en memoria, usar esos datos (incluyendo cambios)
-        if (memoryData) {
-          return memoryData;
-        }
+        if (memoryData) return memoryData;
 
         // Si no, usar datos de JSONPlaceholder
         return {
@@ -37,14 +34,13 @@ class ProjectService {
         };
       });
 
-      // 🔥 AGREGAR proyectos creados localmente que no existen en la API
+      // AGREGAR proyectos creados localmente que no existen en la API
       const memoryProjects = Array.from(memoryDB.values())
         .filter(project => project.id >= 1000) // Solo proyectos creados localmente
         .filter(project => !projects.some(p => p.id === project.id)); // Que no estén ya en la lista
 
       return [...memoryProjects, ...projects].sort((a, b) => b.id - a.id); // Ordenar por ID descendente
     } catch (error) {
-      console.error("Error fetching projects:", error);
       throw error;
     }
   }
@@ -53,9 +49,7 @@ class ProjectService {
     try {
       // Primero verificar si existe en memoria
       const memoryData = memoryDB.get(parseInt(id));
-      if (memoryData) {
-        return memoryData;
-      }
+      if (memoryData) return memoryData;
 
       // Si no está en memoria, buscar en la API
       const response = await api.get(`/posts/${id}`);
@@ -70,14 +64,13 @@ class ProjectService {
         user_id: post.userId,
       };
     } catch (error) {
-      console.error("Error fetching project:", error);
       throw error;
     }
   }
 
   async createProject(projectData) {
     try {
-      // 🔥 GENERAR ID ÚNICO en el cliente
+      // GENERAR ID ÚNICO en el cliente
       const newId = generateUniqueId();
       
       const newProject = {
@@ -99,10 +92,8 @@ class ProjectService {
         userId: 1,
       });
 
-      console.log('Project created with ID:', newProject.id); // Debug
       return newProject;
     } catch (error) {
-      console.error("Error creating project:", error);
       throw error;
     }
   }
@@ -131,7 +122,6 @@ class ProjectService {
 
       return updatedProject;
     } catch (error) {
-      console.error("Error updating project:", error);
       throw error;
     }
   }
@@ -143,7 +133,6 @@ class ProjectService {
       memoryDB.delete(parseInt(id));
       return { success: true };
     } catch (error) {
-      console.error("Error deleting project:", error);
       throw error;
     }
   }
@@ -153,7 +142,6 @@ class ProjectService {
       const response = await api.get("/users");
       return response.data.slice(0, 3);
     } catch (error) {
-      console.error("Error fetching users:", error);
       throw error;
     }
   }

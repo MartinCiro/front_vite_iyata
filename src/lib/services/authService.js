@@ -169,7 +169,6 @@ class AuthService {
   }
 
   handleError(error) {
-    console.log('AuthService error:', error);
     
     // Manejar errores específicos de ReqRes y traducirlos
     if (error.response?.data?.error) {
@@ -181,7 +180,7 @@ class AuthService {
     
     if (error.response?.data) return new Error(error.response.data.message || 'An error occurred');
     
-    // Si ya es un error con mensaje en español, mantenerlo
+    // Si esta en español, retornar tal cual
     if (error.message && error.message.includes('no encontrado'))  return error;
     
     return new Error('Error de conexión');

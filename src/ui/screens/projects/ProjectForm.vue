@@ -69,7 +69,6 @@ onMounted(async () => {
     try {
       await fetchProject(Number(route.params.id))
       if (currentProject.value) {
-        console.log('Current project data:', currentProject.value)
         form.title = currentProject.value.title || ''
         form.description = currentProject.value.description || ''
         form.status = currentProject.value.status || 'pending'

@@ -73,9 +73,7 @@ defineProps({
 
 const emit = defineEmits(['close']);
 
-const closeModal = () => {
-  emit('close');
-};
+const closeModal = () => emit('close');
 
 const sizeClasses = computed(() => {
   const sizes = {

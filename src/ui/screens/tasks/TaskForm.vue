@@ -20,15 +20,20 @@
           </template>
 
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <Input
-              v-model="form.title"
-              label="Task Title"
-              type="text"
-              placeholder="Enter task title"
-              :error="errors.title"
-              :required="true"
-              @blur="validateField('title')"
-            />
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Task Title *
+              </label>
+              <input
+                v-model="form.title"
+                type="text"
+                placeholder="Enter task title"
+                class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 px-3 py-2"
+                :class="{ 'border-red-500': errors.title }"
+                @blur="validateField('title')"
+              />
+              <p v-if="errors.title" class="text-red-500 text-sm mt-1">{{ errors.title }}</p>
+            </div>
 
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -92,13 +97,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
 import AppLayout from 'layouts/AppLayout.vue'
 import Card from 'useable/Card.vue'
 import Button from 'useable/Button.vue'
-import Input from 'useable/Input.vue'
 import { useTasks } from 'hooks/useTasks'
 import { useProjects } from 'hooks/useProjects'
 import { useForm } from 'hooks/useForm'
@@ -112,6 +116,7 @@ const { createTask, updateTask, fetchTask, isLoading, currentTask } = useTasks()
 const { fetchProject, currentProject: project } = useProjects()
 
 const isEditing = computed(() => !!taskId)
+const isSubmitting = ref(false)
 
 const validations = {
   title: {
@@ -132,17 +137,27 @@ const { form, errors, validate, validateField } = useForm(
 )
 
 const handleSubmit = async () => {
+  
   if (!validate()) return
-
+  
+  isSubmitting.value = true
+  
   try {
-    if (isEditing.value && taskId) {
-      await updateTask(taskId, form)
-    } else {
-      await createTask(projectId, form)
+    const taskData = {
+      title: form.title,
+      description: form.description,
+      status: form.status,
+      due_date: form.due_date ? new Date(form.due_date).toISOString() : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      project_id: projectId
     }
+
+    isEditing.value && taskId ? await updateTask(taskId, taskData) : await createTask(taskData)
+    
     router.push(`/projects/${projectId}/tasks`)
   } catch (error) {
     console.error('Error saving task:', error)
+  } finally {
+    isSubmitting.value = false
   }
 }
 
@@ -152,9 +167,9 @@ onMounted(async () => {
   if (isEditing.value && taskId) {
     await fetchTask(taskId)
     if (currentTask.value) {
-      form.title = currentTask.value.title
-      form.description = currentTask.value.description
-      form.status = currentTask.value.status
+      form.title = currentTask.value.title || ''
+      form.description = currentTask.value.description || ''
+      form.status = currentTask.value.status || 'todo'
       form.due_date = currentTask.value.due_date ? currentTask.value.due_date.split('T')[0] : ''
     }
   }

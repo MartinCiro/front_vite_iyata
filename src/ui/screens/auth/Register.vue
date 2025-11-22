@@ -226,9 +226,7 @@ const handleRegister = async () => {
     successMessage.value = result.message;
     
     // Redirigir después de 2 segundos
-    setTimeout(() => {
-      router.push('/dashboard');
-    }, 2000);
+    setTimeout(() => router.push('/dashboard'), 2000);
     
   } catch (err) {
     console.error('Registration error:', err);

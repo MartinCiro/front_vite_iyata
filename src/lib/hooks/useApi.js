@@ -15,7 +15,6 @@ export function useApi() {
       return result;
     } catch (err) {
       error.value = err.message;
-      console.error('API Error:', err);
       throw err;
     } finally {
       loading.value = false;

@@ -70,12 +70,8 @@ export const useProjectStore = defineStore('projects', {
       try {
         const response = await ProjectService.update(id, projectData);
         const index = this.projects.findIndex(p => p.id === id);
-        if (index !== -1) {
-          this.projects[index] = response.data;
-        }
-        if (this.currentProject?.id === id) {
-          this.currentProject = response.data;
-        }
+        if (index !== -1) this.projects[index] = response.data;
+        if (this.currentProject?.id === id) this.currentProject = response.data;
         return response.data;
       } catch (error) {
         this.error = error.message;
@@ -92,9 +88,7 @@ export const useProjectStore = defineStore('projects', {
       try {
         await ProjectService.delete(id);
         this.projects = this.projects.filter(p => p.id !== id);
-        if (this.currentProject?.id === id) {
-          this.currentProject = null;
-        }
+        if (this.currentProject?.id === id) this.currentProject = null;
       } catch (error) {
         this.error = error.message;
         throw error;
@@ -110,12 +104,8 @@ export const useProjectStore = defineStore('projects', {
       try {
         const response = await ProjectService.updateStatus(id, status);
         const index = this.projects.findIndex(p => p.id === id);
-        if (index !== -1) {
-          this.projects[index] = response.data;
-        }
-        if (this.currentProject?.id === id) {
-          this.currentProject = response.data;
-        }
+        if (index !== -1) this.projects[index] = response.data;
+        if (this.currentProject?.id === id) this.currentProject = response.data;
         return response.data;
       } catch (error) {
         this.error = error.message;

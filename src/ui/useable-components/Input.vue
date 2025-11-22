@@ -100,9 +100,7 @@ const hasIconSlot = computed(() => !!slots.icon);
 const inputClasses = computed(() => {
   const base = 'block w-full rounded-md border shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-1 transition-colors';
   
-  if (props.error) {
-    return `${base} border-red-300 focus:border-red-500 focus:ring-red-500 pr-10 ${hasIconSlot.value ? 'pl-10' : 'px-3'} py-2`;
-  }
+  if (props.error) return `${base} border-red-300 focus:border-red-500 focus:ring-red-500 pr-10 ${hasIconSlot.value ? 'pl-10' : 'px-3'} py-2`;
   
   return `${base} border-gray-300 focus:border-blue-500 focus:ring-blue-500 ${hasIconSlot.value ? 'pl-10' : 'px-3'} py-2 disabled:bg-gray-100 disabled:cursor-not-allowed`;
 });

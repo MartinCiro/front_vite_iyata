@@ -146,9 +146,7 @@ const { form, errors, validate, validateField } = useForm(
 watch(
   () => [form.email, form.password],
   () => {
-    if (error.value) {
-      clearError();
-    }
+    if (error.value) clearError();
   }
 );
 

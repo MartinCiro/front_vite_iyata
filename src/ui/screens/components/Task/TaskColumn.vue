@@ -10,8 +10,8 @@
         :key="task.id"
         :task="task"
         :project-id="projectId"
-        @status-change="$emit('status-change', $event)"
-        @delete="$emit('delete', $event)"
+        @status-change="(taskId, newStatus) => $emit('status-change', taskId, newStatus)"
+        @delete="(taskId) => $emit('delete', taskId)"
       />
     </div>
   </div>
@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import TaskCard from 'components/Task/TaskCard.vue'
+import { computed } from 'vue'
 
 interface Props {
   title: string
@@ -27,7 +28,7 @@ interface Props {
   type: 'todo' | 'in_progress' | 'done'
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 defineEmits<{
   'status-change': [taskId: number, newStatus: string]
   'delete': [taskId: number]

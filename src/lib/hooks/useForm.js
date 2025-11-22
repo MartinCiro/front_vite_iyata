@@ -37,9 +37,7 @@ export function useForm(initialValues = {}, validations = {}) {
   const validate = () => {
     let isValid = true;
     Object.keys(validations).forEach(field => {
-      if (!validateField(field)) {
-        isValid = false;
-      }
+      if (!validateField(field)) isValid = false;
     });
     return isValid;
   };

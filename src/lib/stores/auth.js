@@ -69,7 +69,6 @@ export const useAuthStore = defineStore('auth', {
         const response = await AuthService.getCurrentUser();
         this.user = response.user;
       } catch (error) {
-        console.error('Fetch user error:', error);
         this.logout();
       } finally {
         this.isLoading = false;

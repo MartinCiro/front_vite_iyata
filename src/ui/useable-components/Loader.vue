@@ -48,9 +48,7 @@ const props = defineProps({
   },
 });
 
-const containerClasses = computed(() => {
-  return props.center ? 'flex flex-col items-center justify-center' : 'inline-flex items-center';
-});
+const containerClasses = computed(() =>  props.center ? 'flex flex-col items-center justify-center' : 'inline-flex items-center');
 
 const spinnerClasses = computed(() => {
   const base = 'animate-spin';
