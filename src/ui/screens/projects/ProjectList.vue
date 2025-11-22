@@ -225,7 +225,6 @@ const startIndex = computed(() =>  (currentPage.value - 1) * itemsPerPage.value)
 const endIndex = computed(() => Math.min(currentPage.value * itemsPerPage.value, filteredProjects.value.length))
 
 const visiblePages = computed(() => {
-  const pages = []
   const maxVisiblePages = 5
   let startPage = Math.max(1, currentPage.value - Math.floor(maxVisiblePages / 2))
   let endPage = Math.min(totalPages.value, startPage + maxVisiblePages - 1)
@@ -233,10 +232,7 @@ const visiblePages = computed(() => {
   // Ajustar si estamos cerca del final
   if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1)
   
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i)
-  }
-  return pages
+  return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i)
 })
 
 // Métodos

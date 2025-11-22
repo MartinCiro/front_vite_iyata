@@ -1,4 +1,5 @@
 import api from "./api.js";
+import config from 'constants/config.js';
 
 // Simulamos una base de datos en memoria para mantener la consistencia
 const memoryDB = new Map();
@@ -14,7 +15,7 @@ class ProjectService {
   async getProjects() {
     try {
       const response = await api.get("/posts");
-      const apiProjects = response.data.slice(0, 10); // Limitar a 10 proyectos de la API
+      const apiProjects = response.data.slice(0, config.api.limit); // Limitar a 10 proyectos de la API
       
       const projects = apiProjects.map((post) => {
         // ✅ PRIORIDAD a los datos en memoria sobre JSONPlaceholder
