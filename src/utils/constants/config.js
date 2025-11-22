@@ -3,7 +3,7 @@ export default {
   api: {
     baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
     timeout: parseInt(import.meta.env.VITE_API_TIMEOUT) || 10000,
-    apiKey: import.meta.env.VITE_API_KEY || 'default_api_key',
+    apiKey: import.meta.env.VITE_API_KEY || 'reqres-free-v1',
     limit: parseInt(import.meta.env.VITE_LIMIT_PROJECTS) || 10,
   },
 
