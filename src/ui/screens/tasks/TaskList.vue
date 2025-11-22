@@ -62,7 +62,7 @@ import Loader from 'useable/Loader.vue'
 
 // Components
 import TaskBoardHeader from 'components/Task/TaskBoardHeader.vue'
-import TaskFilters from 'components/Task/TaskFilters.vue'
+import TaskFilters from 'components/TaskFilters.vue'
 import TaskColumn from 'components/Task/TaskColumn.vue'
 import TaskBoardEmptyState from 'components/Task/TaskBoardEmptyState.vue'
 

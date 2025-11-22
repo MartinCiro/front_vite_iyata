@@ -1,0 +1,15 @@
+services:
+  vue-app:
+    build:
+      context: .
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+        - VITE_API_TIMEOUT=${VITE_API_TIMEOUT}
+        - VITE_API_KEY=${VITE_API_KEY}
+        - VITE_LIMIT_PROJECTS=${VITE_LIMIT_PROJECTS}
+    container_name: vue-task-manager
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
