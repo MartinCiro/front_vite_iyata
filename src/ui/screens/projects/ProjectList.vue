@@ -5,10 +5,12 @@
         <div class="flex justify-between items-center mb-6">
           <h1 class="text-2xl font-semibold text-gray-900">Projects</h1>
           <router-link to="/projects/create">
-            <Button variant="primary">
-              <PlusIcon class="w-4 h-4 mr-2" />
-              New Project
-            </Button>
+            <button 
+              class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              title="Create new project"
+            >
+              <PlusIcon class="h-5 w-5" />
+            </button>
           </router-link>
         </div>
 
@@ -36,8 +38,8 @@
             Showing {{ paginatedProjects.length }} of {{ filteredProjects.length }} projects
           </div>
 
-          <!-- Grid de proyectos -->
-          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
+          <!-- Grid de proyectos RESPONSIVE -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
             <Card 
               v-for="project in paginatedProjects" 
               :key="project.id"

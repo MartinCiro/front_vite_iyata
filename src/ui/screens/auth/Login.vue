@@ -113,8 +113,8 @@ import {
 import { useAuth } from "hooks/useAuth.js";
 import { useForm } from "hooks/useForm.js";
 import AuthLayout from "layouts/AuthLayout.vue";
-import Input from "../../useable-components/Input.vue";
-import Button from "../../useable-components/Button.vue";
+import Input from "useable/Input.vue";
+import Button from "useable/Button.vue";
 
 const router = useRouter();
 const { login, isLoading, error, clearError } = useAuth();

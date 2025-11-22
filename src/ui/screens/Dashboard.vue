@@ -1,3 +1,4 @@
+<!-- src/ui/screens/dashboard/Dashboard.vue -->
 <template>
   <AppLayout>
     <!-- Header -->
@@ -10,21 +11,28 @@
               Welcome back, {{ user?.first_name || 'User' }}! Here's your overview.
             </p>
           </div>
-          <div class="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              size="sm"
+          <div class="flex items-center space-x-3">
+            <!-- Botón Refresh -->
+            <button 
               @click="refreshData"
-              :loading="isLoading"
+              :disabled="isLoading"
+              class="border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Refresh data"
             >
-              <ArrowPathIcon class="h-4 w-4 mr-2" />
-              Refresh
-            </Button>
-            <router-link to="/projects">
-              <Button variant="primary" size="sm">
-                <PlusIcon class="h-4 w-4 mr-2" />
-                New Project
-              </Button>
+              <ArrowPathIcon 
+                class="h-5 w-5" 
+                :class="{ 'animate-spin': isLoading }" 
+              />
+            </button>
+
+            <!-- Botón New Project -->
+            <router-link to="/projects/create">
+              <button 
+                class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                title="Create new project"
+              >
+                <PlusIcon class="h-5 w-5" />
+              </button>
             </router-link>
           </div>
         </div>
@@ -32,7 +40,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <Card class="p-6">
@@ -199,11 +207,9 @@
               <h3 class="text-lg font-medium text-gray-900">Your Profile</h3>
             </template>
             <div class="text-center">
-              <img
-                :src="user?.avatar || '/default-avatar.png'"
-                :alt="user?.first_name"
-                class="w-16 h-16 rounded-full mx-auto mb-4 border-2 border-gray-200"
-              />
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <UserCircleIcon class="h-8 w-8 text-white" />
+              </div>
               <h4 class="font-semibold text-gray-900">{{ user?.first_name }} {{ user?.last_name }}</h4>
               <p class="text-sm text-gray-500 mb-4">{{ user?.email }}</p>
               <div class="flex justify-center space-x-2">
@@ -221,7 +227,7 @@
           </Card>
         </div>
       </div>
-    </main>
+    </div>
   </AppLayout>
 </template>
 

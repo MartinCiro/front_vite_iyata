@@ -1,14 +1,18 @@
 <template>
-  <div class="min-h-screen bg-gray-100">
-    <Header />
+  <div class="min-h-screen bg-gray-100 flex">
+    <!-- Sidebar -->
+    <Sidebar />
     
-    <div class="flex">
-      <Sidebar />
+    <!-- Main content area -->
+    <div class="flex-1 flex flex-col max-h-[calc(100vh-40px)]">
+      <Header />
       
-      <!-- Main content -->
-      <main class="flex-1 p-6">
-        <div class="max-w-7xl mx-auto">
-          <slot></slot>
+      <!-- Main content - scrollable -->
+      <main class="flex-1 overflow-auto">
+        <div class="p-6">
+          <div class="max-w-7xl mx-auto">
+            <slot></slot>
+          </div>
         </div>
       </main>
     </div>

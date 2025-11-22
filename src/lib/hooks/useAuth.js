@@ -1,5 +1,5 @@
 import { reactive, computed } from 'vue';
-import AuthService from '../services/authService.js';
+import AuthService from 'services/authService.js';
 
 export function useAuth() {
   const state = reactive({
