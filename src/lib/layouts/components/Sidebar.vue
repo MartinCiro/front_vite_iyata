@@ -9,7 +9,9 @@
           class="logo-image"
           @error="handleImageError"
         />
-        <span class="logo-text">Iyata</span>
+        <!-- Logo texto visible en desktop, icono en móvil -->
+        <span class="logo-text hidden sm:block">Iyata</span>
+        <span class="logo-icon sm:hidden">I</span>
       </div>
       <button 
         v-if="showCloseButton"
@@ -24,7 +26,8 @@
     <nav class="sidebar-nav">
       <div class="nav-content">
         <div class="nav-section">
-          <h3 class="nav-section-title" v-if="sections.main.title">
+          <!-- Título solo visible en desktop -->
+          <h3 class="nav-section-title hidden sm:block" v-if="sections.main.title">
             {{ sections.main.title }}
           </h3>
           <ul class="nav-list">
@@ -38,7 +41,12 @@
                   :is="item.icon" 
                   class="nav-icon"
                 />
-                <span class="nav-text">{{ item.name }}</span>
+                <!-- Texto solo visible en desktop -->
+                <span class="nav-text hidden sm:block">{{ item.name }}</span>
+                <!-- Tooltip para móvil -->
+                <div class="sm:hidden absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
+                  {{ item.name }}
+                </div>
                 <span 
                   v-if="item.badge" 
                   class="nav-badge"
@@ -58,10 +66,15 @@
             <li>
               <button
                 @click="handleLogout"
-                class="nav-link nav-link-logout"
+                class="nav-link nav-link-logout group cursor-pointer"
               >
                 <ArrowRightOnRectangleIcon class="nav-icon" />
-                <span class="nav-text">Logout</span>
+                <!-- Texto solo visible en desktop -->
+                <span class="nav-text hidden sm:block">Logout</span>
+                <!-- Tooltip para móvil -->
+                <div class="sm:hidden absolute left-full ml-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity z-50 whitespace-nowrap">
+                  Logout
+                </div>
               </button>
             </li>
           </ul>
@@ -72,12 +85,13 @@
           <div class="user-avatar">
             <img 
               :src="user?.avatar || '/default-avatar.png'" 
-              :alt="user?.name"
+              :alt="user?.first_name"
               @error="handleAvatarError"
             />
           </div>
-          <div class="user-info">
-            <p class="user-name">{{ user?.name || 'User' }}</p>
+          <!-- Info de usuario solo visible en desktop -->
+          <div class="user-info hidden sm:block">
+            <p class="user-name">{{ user?.first_name || 'User' }}</p>
             <p class="user-email">{{ user?.email || 'user@example.com' }}</p>
           </div>
         </div>
@@ -87,19 +101,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useAuth } from '../../hooks/useAuth.js';
+import { useAuth } from 'hooks/useAuth.js';
 import {
   HomeIcon,
-  ChartBarIcon,
-  UsersIcon,
   DocumentTextIcon,
-  Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
   XMarkIcon,
-  InboxIcon,
-  CreditCardIcon
 } from '@heroicons/vue/24/outline';
 
 // Props

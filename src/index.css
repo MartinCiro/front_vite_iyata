@@ -1,13 +1,23 @@
 @import "tailwindcss";
 
 .sidebar {
-  width: 16rem;
+  width: 4rem; /* Móvil: sidebar compacto */
   background-color: white;
   border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
-  height: 100vh; 
-  overflow: hidden; /* Evita scroll en el contenedor principal */
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  transition: width 0.3s ease;
+}
+
+/* Desktop: sidebar expandido */
+@media (min-width: 640px) {
+  .sidebar {
+    width: 16rem;
+  }
 }
 
 /* Header */
@@ -17,7 +27,7 @@
   justify-content: space-between;
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;
-  flex-shrink: 0; /* Evita que el header se encoja */
+  flex-shrink: 0;
 }
 
 .logo {
@@ -37,6 +47,12 @@
   color: #111827;
 }
 
+.logo-icon {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #111827;
+}
+
 .close-button {
   padding: 0.25rem;
   border-radius: 0.375rem;
@@ -50,15 +66,15 @@
 
 /* Navigation */
 .sidebar-nav {
-  flex: 1; /* Ocupa todo el espacio disponible */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Contiene el contenido */
+  overflow: hidden;
 }
 
 .nav-content {
-  flex: 1; /* Ocupa el espacio disponible */
-  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  flex: 1;
+  overflow-y: auto;
 }
 
 .nav-section {
@@ -89,6 +105,14 @@
   border-radius: 0.375rem;
   transition: all 0.2s;
   position: relative;
+}
+
+/* Centrar iconos en móvil */
+@media (max-width: 639px) {
+  .nav-link {
+    justify-content: center;
+    padding: 0.75rem;
+  }
 }
 
 .nav-link:not(.nav-link-active):not(.nav-link-logout) {
@@ -124,6 +148,13 @@
   flex-shrink: 0;
 }
 
+/* En móvil, quitar margen derecho del icono */
+@media (max-width: 639px) {
+  .nav-icon {
+    margin-right: 0;
+  }
+}
+
 .nav-text {
   flex: 1;
 }
@@ -143,9 +174,9 @@
 
 /* Bottom Section */
 .nav-bottom {
-  margin-top: auto; /* Empuja la sección inferior hacia abajo */
+  margin-top: auto;
   border-top: 1px solid #e5e7eb;
-  flex-shrink: 0; /* Evita que se encoja */
+  flex-shrink: 0;
 }
 
 /* User Profile */

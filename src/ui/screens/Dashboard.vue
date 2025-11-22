@@ -16,7 +16,7 @@
             <button 
               @click="refreshData"
               :disabled="isLoading"
-              class="border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="cursor-pointer border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               title="Refresh data"
             >
               <ArrowPathIcon 
@@ -28,7 +28,7 @@
             <!-- Botón New Project -->
             <router-link to="/projects/create">
               <button 
-                class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 title="Create new project"
               >
                 <PlusIcon class="h-5 w-5" />

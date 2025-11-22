@@ -4,7 +4,7 @@
     <Sidebar />
     
     <!-- Main content area -->
-    <div class="flex-1 flex flex-col max-h-[calc(100vh-40px)]">
+    <div class="flex-1 flex flex-col">
       <Header />
       
       <!-- Main content - scrollable -->
