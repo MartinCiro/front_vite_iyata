@@ -22,6 +22,7 @@ export default defineConfig({
       'screens': fileURLToPath(new URL('./src/ui/screens', import.meta.url)),
       'styles': fileURLToPath(new URL('./src/ui/styles', import.meta.url)),
       'layouts': fileURLToPath(new URL('./src/lib/layouts', import.meta.url)),
+      'components': fileURLToPath(new URL('./src/ui/screens/components', import.meta.url)),
     },
   },
 })

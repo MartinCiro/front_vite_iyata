@@ -188,11 +188,11 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon
 } from '@heroicons/vue/24/outline'
-import AppLayout from '../../../lib/layouts/AppLayout.vue'
-import Card from '../../../ui/useable-components/Card.vue'
-import Button from '../../../ui/useable-components/Button.vue'
-import Loader from '../../../ui/useable-components/Loader.vue'
-import { useProjects } from '../../../lib/hooks/useProjects'
+import AppLayout from 'layouts/AppLayout.vue'
+import Card from 'useable/Card.vue'
+import Button from 'useable/Button.vue'
+import Loader from 'useable/Loader.vue'
+import { useProjects } from 'hooks/useProjects'
 
 const { projects, isLoading, fetchProjects, deleteProject } = useProjects()
 
