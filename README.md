@@ -82,7 +82,7 @@ src/
 ### Desarrollo
 ```bash
 # Clonar el proyecto
-git clone <repository-url>
+git clone front_vite_iyata
 cd iyata-frontend
 
 # Instalar dependencias
