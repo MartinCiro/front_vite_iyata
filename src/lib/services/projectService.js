@@ -15,16 +15,12 @@ class ProjectService {
   async getProjects() {
     try {
       const response = await api.get("/posts");
-      const apiProjects = response.data.slice(0, config.api.limit); // Limitar a 10 proyectos de la API
+      const apiProjects = response.data.slice(0, config.api.limit);
       
       const projects = apiProjects.map((post) => {
-        // ✅ PRIORIDAD a los datos en memoria sobre JSONPlaceholder
         const memoryData = memoryDB.get(post.id);
-
-        // Si existe en memoria, usar esos datos (incluyendo cambios)
         if (memoryData) return memoryData;
 
-        // Si no, usar datos de JSONPlaceholder
         return {
           id: post.id,
           title: post.title,
@@ -35,12 +31,12 @@ class ProjectService {
         };
       });
 
-      // AGREGAR proyectos creados localmente que no existen en la API
+      // Agregar proyectos creados localmente
       const memoryProjects = Array.from(memoryDB.values())
-        .filter(project => project.id >= 1000) // Solo proyectos creados localmente
-        .filter(project => !projects.some(p => p.id === project.id)); // Que no estén ya en la lista
+        .filter(project => project.id >= 1000)
+        .filter(project => !projects.some(p => p.id === project.id));
 
-      return [...memoryProjects, ...projects].sort((a, b) => b.id - a.id); // Ordenar por ID descendente
+      return [...memoryProjects, ...projects].sort((a, b) => b.id - a.id);
     } catch (error) {
       throw error;
     }
@@ -71,7 +67,6 @@ class ProjectService {
 
   async createProject(projectData) {
     try {
-      // GENERAR ID ÚNICO en el cliente
       const newId = generateUniqueId();
       
       const newProject = {
@@ -83,16 +78,8 @@ class ProjectService {
         user_id: 1,
       };
 
-      // Guardar en memoria para mantener la consistencia
+      // Guardar en memoria
       memoryDB.set(newProject.id, newProject);
-
-      // También hacer el POST a la API (aunque no persista)
-      await api.post("/posts", {
-        title: projectData.title,
-        body: projectData.description || "",
-        userId: 1,
-      });
-
       return newProject;
     } catch (error) {
       throw error;
@@ -103,22 +90,30 @@ class ProjectService {
     try {
       const projectId = parseInt(id);
       
-      await api.put(`/posts/${id}`, {
-        title: projectData.title,
-        body: projectData.description || "",
-        userId: 1,
-      });
+      if (projectId < 1000) {
+        // Para IDs de la API (1-100), hacer el PUT normal
+        await api.put(`/posts/${id}`, {
+          title: projectData.title,
+          body: projectData.description || "",
+          userId: 1,
+        });
+      } else {
+        console.log('Updating local project in memory:', projectId);
+      }
 
+      // Obtener proyecto existente para preservar datos
+      const existingProject = memoryDB.get(projectId) || {};
+      
       const updatedProject = {
         id: projectId,
         title: projectData.title,
-        description: projectData.description,
+        description: projectData.description || "",
         status: projectData.status || "active",
-        created_at: new Date().toISOString(),
+        created_at: existingProject.created_at || new Date().toISOString(), // Preservar fecha original
         user_id: 1,
       };
 
-      // Actualizar en memoria
+      // Actualizar en memoria (para todos los casos)
       memoryDB.set(projectId, updatedProject);
 
       return updatedProject;
@@ -129,9 +124,17 @@ class ProjectService {
 
   async deleteProject(id) {
     try {
-      await api.delete(`/posts/${id}`);
-      // Eliminar de memoria
-      memoryDB.delete(parseInt(id));
+      const projectId = parseInt(id);
+      
+      // 🔥 Misma lógica que taskService: Solo hacer DELETE para IDs < 1000
+      if (projectId < 1000) {
+        await api.delete(`/posts/${id}`);
+      } else {
+        console.log('Deleting local project from memory:', projectId);
+      }
+      
+      // Eliminar de memoria (para todos los casos)
+      memoryDB.delete(projectId);
       return { success: true };
     } catch (error) {
       throw error;
