@@ -110,9 +110,9 @@ import {
   LockClosedIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/vue/24/outline";
-import { useAuth } from "../../../lib/hooks/useAuth.js";
-import { useForm } from "../../../lib/hooks/useForm.js";
-import AuthLayout from "../../../lib/layouts/AuthLayout.vue";
+import { useAuth } from "hooks/useAuth.js";
+import { useForm } from "hooks/useForm.js";
+import AuthLayout from "layouts/AuthLayout.vue";
 import Input from "../../useable-components/Input.vue";
 import Button from "../../useable-components/Button.vue";
 

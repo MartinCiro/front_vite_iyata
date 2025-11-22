@@ -118,13 +118,13 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { ArrowLeftIcon, PlusIcon, ClipboardDocumentListIcon } from '@heroicons/vue/24/outline'
-import AppLayout from '../../../lib/layouts/AppLayout.vue'
-import Card from '../../../ui/useable-components/Card.vue'
-import Button from '../../../ui/useable-components/Button.vue'
-import Loader from '../../../ui/useable-components/Loader.vue'
+import AppLayout from 'layouts/AppLayout.vue'
+import Card from 'useable/Card.vue'
+import Button from 'useable/Button.vue'
+import Loader from 'useable/Loader.vue'
 import TaskCard from '../components/TaskCard.vue'
-import { useTasks } from '../../../lib/hooks/useTasks'
-import { useProjects } from '../../../lib/hooks/useProjects'
+import { useTasks } from 'hooks/useTasks'
+import { useProjects } from 'hooks/useProjects'
 
 const route = useRoute()
 const projectId = Number(route.params.projectId)

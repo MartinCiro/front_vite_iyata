@@ -56,7 +56,7 @@
 
 <script setup>
 import { useAuth } from '../../hooks/useAuth.js';
-import Button from '../../../ui/useable-components/Button.vue';
+import Button from 'useable/Button.vue';
 import { ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline';
 
 const { user, logout } = useAuth();

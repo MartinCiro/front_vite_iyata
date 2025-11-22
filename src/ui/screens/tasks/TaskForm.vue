@@ -95,13 +95,13 @@
 import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
-import AppLayout from '../../../lib/layouts/AppLayout.vue'
-import Card from '../../../ui/useable-components/Card.vue'
-import Button from '../../../ui/useable-components/Button.vue'
-import Input from '../../../ui/useable-components/Input.vue'
-import { useTasks } from '../../lib/hooks/useTasks'
-import { useProjects } from '../../../lib/hooks/useProjects'
-import { useForm } from '../../../lib/hooks/useForm'
+import AppLayout from 'layouts/AppLayout.vue'
+import Card from 'useable/Card.vue'
+import Button from 'useable/Button.vue'
+import Input from 'useable/Input.vue'
+import { useTasks } from 'hooks/useTasks'
+import { useProjects } from 'hooks/useProjects'
+import { useForm } from 'hooks/useForm'
 
 const route = useRoute()
 const router = useRouter()

@@ -1,6 +1,4 @@
-// src/lib/services/authService.js
 import api from './api';
-import config from 'constants/config.js';
 
 class AuthService {
   // Claves fijas para localStorage - simples y consistentes

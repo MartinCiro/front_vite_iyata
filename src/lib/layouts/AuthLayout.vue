@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import Card from '../../ui/useable-components/Card.vue';
+import Card from 'useable/Card.vue';
 
 defineProps({
   title: {

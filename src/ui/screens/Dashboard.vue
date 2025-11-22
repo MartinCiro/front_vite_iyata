@@ -227,10 +227,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useAuth } from '../../lib/hooks/useAuth.js'
-import AppLayout from '../../lib/layouts/AppLayout.vue'
-import Card from '../../ui/useable-components/Card.vue'
-import Button from '../../ui/useable-components/Button.vue'
+import { useAuth } from 'hooks/useAuth.js'
+import AppLayout from 'layouts/AppLayout.vue'
+import Card from 'useable/Card.vue'
+import Button from 'useable/Button.vue'
 import {
   ArrowPathIcon,
   PlusIcon,

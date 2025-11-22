@@ -27,15 +27,7 @@ api.interceptors.request.use(
     requestConfig.baseURL = getBaseURL(requestConfig.url);
     
     const token = AuthService.getToken();
-    if (token) {
-      requestConfig.headers.Authorization = `Bearer ${token}`;
-    }
-    
-    console.log('API Request:', {
-      method: requestConfig.method?.toUpperCase(),
-      url: requestConfig.url,
-      baseURL: requestConfig.baseURL
-    });
+    if (token) requestConfig.headers.Authorization = `Bearer ${token}`;
     
     return requestConfig;
   },
@@ -48,10 +40,6 @@ api.interceptors.request.use(
 // Interceptor para manejar errores globalmente
 api.interceptors.response.use(
   (response) => {
-    console.log('API Response:', {
-      status: response.status,
-      url: response.config.url
-    });
     return response;
   },
   (error) => {
